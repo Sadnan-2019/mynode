@@ -18,7 +18,16 @@ const users = [
      {id:4,name:"bajekalam",email:"kalam@gmail.com"},
 ]
 app.get("/users",(req,res) =>{
-     res.send(users)
+     console.log("query", req.query)
+     
+     if(req.query.name){
+          const search = req.query.name.toLocaleLowerCase();
+          const matched = users.filter(user=> user.name.toLocaleLowerCase().includes(search));
+          res.send(matched)
+     }else{
+          res.send(users)
+     }
+  
 })
 app.get("/user/:id", (req, res) => {
      console.log(req.params)
@@ -30,7 +39,11 @@ app.get("/user/:id", (req, res) => {
 
 app.post("/user", (req, res) =>{
      console.log("request",req.body)
-     res.send("post request success")
+     const user = req.body;
+     user.id = users.length + 1;
+     users.push(user)
+     res.send(user)
+     console.log(user);
 
 })
 app.listen(port, () => {
